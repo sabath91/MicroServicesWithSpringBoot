@@ -1,5 +1,6 @@
 package pl.czyz.socialmultiplication.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore("Not needed since, we have unit test for implementation")
 public class MultiplicationServiceTest {
 
     @MockBean
@@ -29,7 +31,6 @@ public class MultiplicationServiceTest {
 
         assertThat(multiplication.getFactorA()).isEqualTo(50);
         assertThat(multiplication.getFactorB()).isEqualTo(30);
-        assertThat(multiplication.getResult()).isEqualTo(1500);
     }
 
 }

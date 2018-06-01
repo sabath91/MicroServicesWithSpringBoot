@@ -1,5 +1,6 @@
 package pl.czyz.socialmultiplication.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore("Not needed since, we have unit test for implementation")
 public class RandomGeneratorServiceTest {
 
     @Autowired
