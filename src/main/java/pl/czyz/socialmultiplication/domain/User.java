@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +22,7 @@ public class User {
     @Column(name = "USER_ID")
     private Long id;
 
+    //    @Column(unique = true)
     private final String alias;
 
     protected User() {

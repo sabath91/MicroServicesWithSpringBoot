@@ -14,19 +14,20 @@ import javax.persistence.*;
 @Entity
 public final class MultiplicationResultAttempt {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "USER_ID")
     private final User user;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "MULTIPLICATION_ID")
+
     private final Multiplication multiplication;
     private final int resultAttempt;
     private final boolean correct;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    MultiplicationResultAttempt(){
+    MultiplicationResultAttempt() {
         this(null, null, -1, false);
     }
 

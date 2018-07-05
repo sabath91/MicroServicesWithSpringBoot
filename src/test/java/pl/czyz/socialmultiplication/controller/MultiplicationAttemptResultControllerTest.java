@@ -1,8 +1,9 @@
 package pl.czyz.socialmultiplication.controller;
 
-import io.restassured.http.ContentType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.apache.http.HttpStatus;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,6 +12,9 @@ import pl.czyz.socialmultiplication.domain.MultiplicationResultAttempt;
 import pl.czyz.socialmultiplication.domain.User;
 import pl.czyz.socialmultiplication.service.MultiplicationService;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -57,4 +61,27 @@ public class MultiplicationAttemptResultControllerTest {
                     .body("correct", equalTo(correct));
         //@formatter:on
     }
+
+    @Test
+    public void getUserStats() throws Exception {
+        //given
+        User user = new User("john");
+        Multiplication multiplication = new Multiplication(50, 70);
+        MultiplicationResultAttempt attempt = new MultiplicationResultAttempt(user, multiplication, 3500, true);
+        List<MultiplicationResultAttempt> recentAttempts = Lists.newArrayList(attempt, attempt);
+        given(multiplicationService.getStatsForUser("john")).willReturn(recentAttempts);
+        ObjectMapper mapper = new ObjectMapper();
+
+        //@formatter:off
+        RestAssuredMockMvc
+                .given()
+                    .param("alias", "john")
+                .get("/results")
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body(is(mapper.writeValueAsString(recentAttempts)));
+//       @formatter:on
+
+    }
+
 }

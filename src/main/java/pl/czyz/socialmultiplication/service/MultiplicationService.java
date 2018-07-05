@@ -3,6 +3,8 @@ package pl.czyz.socialmultiplication.service;
 import pl.czyz.socialmultiplication.domain.Multiplication;
 import pl.czyz.socialmultiplication.domain.MultiplicationResultAttempt;
 
+import java.util.List;
+
 public interface MultiplicationService {
 
     /**
@@ -13,9 +15,9 @@ public interface MultiplicationService {
     Multiplication createRandomMultiplication();
 
     /**
-     *
      * @return true if the attempt matches the result of the multiplication, false otherwise
      */
     boolean checkAttempt(final MultiplicationResultAttempt resultAttempt);
 
+    List<MultiplicationResultAttempt> getStatsForUser(String userAlias);
 }

@@ -1,5 +1,6 @@
 package pl.czyz.socialmultiplication.service;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -9,6 +10,7 @@ import pl.czyz.socialmultiplication.domain.User;
 import pl.czyz.socialmultiplication.repository.MultiplicationResultAttemptRepository;
 import pl.czyz.socialmultiplication.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -72,6 +74,32 @@ public class MultiplicationServiceImplTest {
 
         assertThat(attemptResult).isFalse();
         verify(attemptRepository).save(attempt);
+    }
+
+    @Test
+    public void retrieveStatsTest() {
+        Multiplication multiplication = new Multiplication(50, 60);
+        User user = new User("john_doe");
+        MultiplicationResultAttempt attempt1 = new MultiplicationResultAttempt(user, multiplication, 3010, false);
+        MultiplicationResultAttempt attempt2 = new MultiplicationResultAttempt(user, multiplication, 3051, false);
+        MultiplicationResultAttempt attempt3 = new MultiplicationResultAttempt(user, multiplication, 3013, false);
+        MultiplicationResultAttempt attempt4 = new MultiplicationResultAttempt(user, multiplication, 3011, false);
+
+
+        List<MultiplicationResultAttempt> lastAttempts = Lists.newArrayList(attempt1, attempt2, attempt3, attempt4);
+        //         Code below do not work in inteliji..
+        //        List<MultiplicationResultAttempt> lastAttempts = List.of(attempt1, attempt2, attempt3, attempt4);
+
+
+        given(userRepository.findByAlias("john_doe")).willReturn(Optional.empty());
+        given(attemptRepository.findTop5ByUserAliasOrderByIdDesc("john_doe")).willReturn(lastAttempts);
+
+        //when
+        List<MultiplicationResultAttempt> latestAttemptsResult = multiplicationService.getStatsForUser("john_doe");
+
+        //then
+        assertThat(latestAttemptsResult).isEqualTo(lastAttempts);
+
     }
 
 }

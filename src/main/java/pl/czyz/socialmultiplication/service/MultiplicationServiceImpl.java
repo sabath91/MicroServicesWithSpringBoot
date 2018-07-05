@@ -10,14 +10,15 @@ import pl.czyz.socialmultiplication.domain.User;
 import pl.czyz.socialmultiplication.repository.MultiplicationResultAttemptRepository;
 import pl.czyz.socialmultiplication.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MultiplicationServiceImpl implements MultiplicationService {
 
-    private RandomGeneratorService randomGeneratorService;
     private final MultiplicationResultAttemptRepository attemptRepository;
     private final UserRepository userRepository;
+    private RandomGeneratorService randomGeneratorService;
 
     @Autowired
     public MultiplicationServiceImpl(RandomGeneratorService randomGeneratorService, MultiplicationResultAttemptRepository attemptRepository, UserRepository userRepository) {
@@ -40,15 +41,18 @@ public class MultiplicationServiceImpl implements MultiplicationService {
 
         Assert.isTrue(!attempt.isCorrect(), "You can't send an attempt marked as correct");
 
-        boolean correct = attempt.getResultAttempt() ==
+        boolean isCorrect = attempt.getResultAttempt() ==
                 attempt.getMultiplication().getFactorA() * attempt.getMultiplication().getFactorB();
 
-
-        MultiplicationResultAttempt checkedAttempt = new MultiplicationResultAttempt(attempt.getUser(),
-                attempt.getMultiplication(), attempt.getResultAttempt(), correct);
+        MultiplicationResultAttempt checkedAttempt = new MultiplicationResultAttempt(user.orElse(attempt.getUser()), attempt.getMultiplication(), attempt.getResultAttempt(), isCorrect);
 
         attemptRepository.save(checkedAttempt);
 
-        return correct;
+        return isCorrect;
+    }
+
+    @Override
+    public List<MultiplicationResultAttempt> getStatsForUser(String userAlias) {
+        return attemptRepository.findTop5ByUserAliasOrderByIdDesc(userAlias);
     }
 }
