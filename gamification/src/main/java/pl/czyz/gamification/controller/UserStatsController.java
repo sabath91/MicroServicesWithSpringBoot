@@ -7,21 +7,18 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.czyz.gamification.domain.GameStats;
 import pl.czyz.gamification.service.GameService;
 
-import java.nio.file.LinkOption;
-
 @RestController
 @RequestMapping("/stats")
 public class UserStatsController {
 
-    private final GameService gameService;
+  private final GameService gameService;
 
-    public UserStatsController(final GameService gameService) {
-        this.gameService = gameService;
-    }
+  public UserStatsController(final GameService gameService) {
+    this.gameService = gameService;
+  }
 
-    @GetMapping
-    public GameStats getStatsForUser(@RequestParam("userId") final Long userId) {
-        return gameService.retrieveStatsForUser(userId);
-    }
-
+  @GetMapping
+  public GameStats getStatsForUser(@RequestParam("userId") final Long userId) {
+    return gameService.retrieveStatsForUser(userId);
+  }
 }

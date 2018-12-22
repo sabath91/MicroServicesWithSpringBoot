@@ -11,17 +11,15 @@ import pl.czyz.multiplication.service.MultiplicationService;
 @RequestMapping("/multiplications")
 public class MultiplicationController {
 
-    private final MultiplicationService multiplicationService;
+  private final MultiplicationService multiplicationService;
 
-    @Autowired
-    public MultiplicationController(final MultiplicationService multiplicationService) {
-        this.multiplicationService = multiplicationService;
-    }
+  @Autowired
+  public MultiplicationController(final MultiplicationService multiplicationService) {
+    this.multiplicationService = multiplicationService;
+  }
 
-    @GetMapping("/random")
-    Multiplication getRandomMultiplication() {
-        return multiplicationService.createRandomMultiplication();
-    }
-
-
+  @GetMapping("/random")
+  Multiplication getRandomMultiplication() {
+    return multiplicationService.createRandomMultiplication();
+  }
 }

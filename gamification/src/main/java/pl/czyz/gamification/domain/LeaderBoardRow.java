@@ -10,10 +10,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public final class LeaderBoardRow {
-    private final Long userId;
-    private final Long totalScore;
+  private final Long userId;
+  private final Long totalScore;
 
-    LeaderBoardRow() {
-        this(null, null);
-    }
+  LeaderBoardRow() {
+    this(null, null);
+  }
 }

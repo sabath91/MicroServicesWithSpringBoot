@@ -1,4 +1,4 @@
-package pl.czyz.multiplication.event;
+package pl.czyz.gamification.event;
 
 import java.io.Serializable;
 import lombok.EqualsAndHashCode;
