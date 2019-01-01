@@ -40,12 +40,16 @@ public class GameServiceImplTest {
   }
 
   @Test
-  public void proccessFirstCorrectAttemptTest() {
+  public void processFirstCorrectAttemptTest() {
     // given
     final Long userId = 1L;
     final Long attemptId = 2L;
     int totalScore = 10;
     given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(totalScore);
+    MultiplicationResultAttempt attempt = new MultiplicationResultAttempt("alias", 11, 11, 121,
+        true);
+    given(multiplicationResultAttemptClient.retrieveMultiplicationResultAttemptById(any()))
+        .willReturn(attempt);
     final ScoreCard scoreCard = new ScoreCard(userId, attemptId);
     given(scoreCardRepository.findByUserIdOrderByScoreTimestampDesc(userId))
         .willReturn(Collections.singletonList(scoreCard));
@@ -63,10 +67,9 @@ public class GameServiceImplTest {
     final Long userId = 2L;
     final Long attemptId = 21L;
     final int luckyNumber = 42;
-    BadgeCard luckyNumberBadge = new BadgeCard(userId, Badge.LUCKY_NUMBER);
     MultiplicationResultAttempt attempt =
         new MultiplicationResultAttempt("alias", luckyNumber, 12, 504, true);
-    given(multiplicationResultAttemptClient.retriveMultiplicationResultAttemptById(any()))
+    given(multiplicationResultAttemptClient.retrieveMultiplicationResultAttemptById(any()))
         .willReturn(attempt);
 
     GameStats interaction = gameService.newAttemptForUser(userId, attemptId, true);
@@ -78,13 +81,17 @@ public class GameServiceImplTest {
   public void processCorrectAttemptForScoreBadgeTest() {
     final Long userId = 1L;
     final Long attemptId = 21L;
-    int totalSocre = 100;
-    BadgeCard fisrtWonBadge = new BadgeCard(userId, Badge.FIRST_WON);
-    given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(totalSocre);
+    int totalScore = 100;
+    BadgeCard firstWonBadge = new BadgeCard(userId, Badge.FIRST_WON);
+    MultiplicationResultAttempt attempt = new MultiplicationResultAttempt("alias", 11, 11, 121,
+        true);
+    given(multiplicationResultAttemptClient.retrieveMultiplicationResultAttemptById(any()))
+        .willReturn(attempt);
+    given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(totalScore);
     given(scoreCardRepository.findByUserIdOrderByScoreTimestampDesc(userId))
         .willReturn(createNScoreCards(10, userId));
     given(badgeCardRepository.findByUserIdOrderByBadgeTimestampDesc(userId))
-        .willReturn(Collections.singletonList(fisrtWonBadge));
+        .willReturn(Collections.singletonList(firstWonBadge));
 
     final GameStats gameStats = gameService.newAttemptForUser(userId, attemptId, true);
 

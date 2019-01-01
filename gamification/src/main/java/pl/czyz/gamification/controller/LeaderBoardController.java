@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.czyz.gamification.domain.LeaderBoardRow;
 import pl.czyz.gamification.service.LeaderBoardService;
 
+/**
+ * This class implements a REST API for the Gamification LeaderBoard service.
+ */
 @RestController
 @RequestMapping("/leaders")
 class LeaderBoardController {

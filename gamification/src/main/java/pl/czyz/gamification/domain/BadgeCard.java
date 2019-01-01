@@ -9,6 +9,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+/**
+ * This class links a Badge to a User. Contains also a timestamp with the moment in which the user
+ * got it.
+ */
 @RequiredArgsConstructor
 @Getter
 @ToString

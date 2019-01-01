@@ -8,6 +8,8 @@ function updateMultiplication() {
     // Gets a random challenge from API and loads the data in the HTML
     $('.multiplication-a').empty().append(data.factorA);
     $('.multiplication-b').empty().append(data.factorB);
+    console.log(
+        'result for multiplication is -> ' + data.factorA * data.factorB);
   });
 }
 

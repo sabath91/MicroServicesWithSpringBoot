@@ -2,6 +2,7 @@ package pl.czyz.multiplication.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -16,6 +17,7 @@ import pl.czyz.multiplication.domain.Multiplication;
 import pl.czyz.multiplication.domain.MultiplicationResultAttempt;
 import pl.czyz.multiplication.domain.User;
 import pl.czyz.multiplication.event.EventDispatcher;
+import pl.czyz.multiplication.event.MultiplicationSolvedEvent;
 import pl.czyz.multiplication.excepiotns.MultiplicationResultAttemptNotFoundException;
 import pl.czyz.multiplication.repository.MultiplicationResultAttemptRepository;
 import pl.czyz.multiplication.repository.UserRepository;
@@ -58,12 +60,15 @@ public class MultiplicationServiceImplTest {
         new MultiplicationResultAttempt(user, multiplication, 3000, false);
     MultiplicationResultAttempt verifiedAttempt =
         new MultiplicationResultAttempt(user, multiplication, 3000, true);
+    MultiplicationSolvedEvent event = new MultiplicationSolvedEvent(attempt.getId(), user.getId(),
+        true);
     given(userRepository.findByAlias("john_doe")).willReturn(Optional.empty());
 
     boolean attemptResult = multiplicationService.checkAttempt(attempt);
 
     assertThat(attemptResult).isTrue();
     verify(attemptRepository).save(verifiedAttempt);
+    verify(eventDispatcher).send(eq(event));
   }
 
   @Test
@@ -72,12 +77,15 @@ public class MultiplicationServiceImplTest {
     User user = new User("john_doe");
     MultiplicationResultAttempt attempt =
         new MultiplicationResultAttempt(user, multiplication, 4212, false);
+    MultiplicationSolvedEvent event = new MultiplicationSolvedEvent(attempt.getId(), user.getId(),
+        false);
     given(userRepository.findByAlias("john_doe")).willReturn(Optional.empty());
 
     boolean attemptResult = multiplicationService.checkAttempt(attempt);
 
     assertThat(attemptResult).isFalse();
     verify(attemptRepository).save(attempt);
+    verify(eventDispatcher).send(eq(event));
   }
 
   @Test
@@ -117,9 +125,9 @@ public class MultiplicationServiceImplTest {
   }
 
   @Test
-  public void shouldReturnMultiplicationAttemptDetailsWhenOneExistsInDatanase()
+  public void shouldReturnMultiplicationAttemptDetailsWhenOneExistsInDatabase()
       throws MultiplicationResultAttemptNotFoundException {
-    // givenresultById
+    // given resultById
     final MultiplicationResultAttempt expectedAttempt =
         new MultiplicationResultAttempt(mock(User.class), mock(Multiplication.class), 100, true);
     given(attemptRepository.findById(any())).willReturn(Optional.of(expectedAttempt));

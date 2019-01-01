@@ -13,6 +13,6 @@ spring:
 
 #RABBIT MQ
 multiplication:
-  exchange: multiplicataion_exchange
+  exchange: multiplication_exchange
   solved:
     key: multiplication.solved

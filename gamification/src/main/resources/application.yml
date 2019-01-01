@@ -1,0 +1,18 @@
+server.port: 8081
+
+spring:
+  h2.console.enabled: true
+  jpa:
+    hibernate.ddl-auto: update
+    properties.hibernate.show_sql: true
+  datasource.url: jdbc:h2:file:~/gamification;DB_CLOSE_ON_EXIT=FALSE;
+
+multiplication:
+  exchange: multiplication_exchange
+  solved:
+    key: multiplication.solved
+  queue: gamification_multiplication_queue
+  anything.routing-key: multiplication.*
+
+#REST client settings
+multiplicationHost: http://localhost:8080

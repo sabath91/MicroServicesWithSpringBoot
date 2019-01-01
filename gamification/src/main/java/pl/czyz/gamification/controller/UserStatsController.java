@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.czyz.gamification.domain.GameStats;
 import pl.czyz.gamification.service.GameService;
 
+/**
+ * This class implements a REST API for the Gamification User statistics service.
+ */
 @RestController
 @RequestMapping("/stats")
 public class UserStatsController {

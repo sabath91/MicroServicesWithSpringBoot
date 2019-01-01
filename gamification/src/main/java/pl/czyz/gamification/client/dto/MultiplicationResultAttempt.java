@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @JsonDeserialize(using = MultiplicationResultAttemptDeserializer.class)
-public class MultiplicationResultAttempt {
+public final class MultiplicationResultAttempt {
 
   private final String userAlias;
   private final int multiplicationFactorA;

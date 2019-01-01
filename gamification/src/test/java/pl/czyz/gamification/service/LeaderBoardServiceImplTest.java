@@ -32,8 +32,8 @@ public class LeaderBoardServiceImplTest {
     final List<LeaderBoardRow> expectedLeaderBoard = Collections.singletonList(leaderBoardRow);
     given(scoreCardRepository.findFirst10()).willReturn(expectedLeaderBoard);
 
-    List<LeaderBoardRow> retrivedLeaderBoard = leaderBoardService.getCurrentLeaderBoard();
+    List<LeaderBoardRow> retriedLeaderBoard = leaderBoardService.getCurrentLeaderBoard();
 
-    assertThat(retrivedLeaderBoard).isEqualTo(expectedLeaderBoard);
+    assertThat(retriedLeaderBoard).isEqualTo(expectedLeaderBoard);
   }
 }

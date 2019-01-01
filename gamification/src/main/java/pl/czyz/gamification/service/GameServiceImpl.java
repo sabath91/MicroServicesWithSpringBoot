@@ -49,9 +49,13 @@ public class GameServiceImpl implements GameService {
           badgeCards.stream().map(BadgeCard::getBadge).collect(Collectors.toList());
       return new GameStats(userId, scoreCard.getScore(), badgeList);
     }
-    return GameStats.epmtyStats(userId);
+    return GameStats.emptyStats(userId);
   }
 
+  /**
+   * checks the total score and the different score cards obtained to give new badges in case their
+   * conditions are met.
+   */
   private List<BadgeCard> processForBadges(final Long userId, final Long attemptId) {
     List<BadgeCard> badgeCards = new ArrayList<>();
     int totalScore = scoreCardRepository.getTotalScoreForUser(userId);
@@ -62,19 +66,19 @@ public class GameServiceImpl implements GameService {
         badgeCardRepository.findByUserIdOrderByBadgeTimestampDesc(userId);
 
     checkAndGiveBadgeBasedOnScore(
-            badgeCardList, Badge.BRONZE_MULTIPLICATOR, totalScore, 100, userId)
+        badgeCardList, Badge.BRONZE_MULTIPLICATOR, totalScore, 100, userId)
         .ifPresent(badgeCards::add);
     checkAndGiveBadgeBasedOnScore(
-            badgeCardList, Badge.SILVER_MULTIPLICATOR, totalScore, 500, userId)
+        badgeCardList, Badge.SILVER_MULTIPLICATOR, totalScore, 500, userId)
         .ifPresent(badgeCards::add);
     checkAndGiveBadgeBasedOnScore(badgeCardList, Badge.GOLD_MULTIPLICATOR, totalScore, 999, userId)
         .ifPresent(badgeCards::add);
 
     final MultiplicationResultAttempt attempt =
-        multiplicationResultAttemptClient.retriveMultiplicationResultAttemptById(attemptId);
+        multiplicationResultAttemptClient.retrieveMultiplicationResultAttemptById(attemptId);
     if (!containsBadge(badgeCardList, Badge.LUCKY_NUMBER)
         && (LUCKY_NUMBER == attempt.getMultiplicationFactorA()
-            || LUCKY_NUMBER == attempt.getMultiplicationFactorB())) {
+        || LUCKY_NUMBER == attempt.getMultiplicationFactorB())) {
       BadgeCard luckyNumberBadge = new BadgeCard(userId, Badge.LUCKY_NUMBER);
       badgeCards.add(luckyNumberBadge);
     }
@@ -94,6 +98,10 @@ public class GameServiceImpl implements GameService {
         userId, score, badgeCards.stream().map(BadgeCard::getBadge).collect(Collectors.toList()));
   }
 
+  /**
+   * Convenience method to check the current score against the different thresholds to gain badges.
+   * It also assigns badge to user if the conditions are met.
+   */
   private Optional<BadgeCard> checkAndGiveBadgeBasedOnScore(
       final List<BadgeCard> badgeCardList,
       final Badge badge,
@@ -106,10 +114,16 @@ public class GameServiceImpl implements GameService {
     return Optional.empty();
   }
 
+  /**
+   * Checks if the passed list of badges includes the one being checked
+   */
   private boolean containsBadge(final List<BadgeCard> badgeCardList, final Badge badge) {
     return badgeCardList.stream().anyMatch(badgeCard -> badgeCard.getBadge().equals(badge));
   }
 
+  /**
+   * Checks if the passed list of badges includes the one being checked
+   */
   private BadgeCard giveBadgeToUser(final Badge badge, final Long userId) {
     BadgeCard badgeCard = new BadgeCard(userId, badge);
     badgeCardRepository.save(badgeCard);
