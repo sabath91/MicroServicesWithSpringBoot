@@ -1,6 +1,8 @@
+var SERVER_URL = "http://localhost:8000/api";
+
 function updateMultiplication() {
   $.ajax({
-    url: "http://localhost:8080/multiplications/random"
+    url: SERVER_URL + "/multiplications/random"
   }).then(function (data) {
     // Cleans the form
     $("#attempt-form").find("input[name='result-attempt']").val("");
@@ -8,24 +10,30 @@ function updateMultiplication() {
     // Gets a random challenge from API and loads the data in the HTML
     $('.multiplication-a').empty().append(data.factorA);
     $('.multiplication-b').empty().append(data.factorB);
-    console.log(
-        'result for multiplication is -> ' + data.factorA * data.factorB);
+    console.log('All admins should look to the logs: ' + data.factorA + ' x '
+        + data.factorB + ' = ' + data.factorB * data.factorA);
   });
 }
 
-function updateStats(alias) {
+function updateResults(alias) {
+  var userId = -1;
   $.ajax({
-    url: "http://localhost:8080/results?alias=" + alias,
-  }).then(function (data) {
-    $('#stats-body').empty();
-    data.forEach(function (row) {
-      $('#stats-body').append('<tr><td>' + row.id + '</td>' +
-          '<td>' + row.multiplication.factorA + ' x '
-          + row.multiplication.factorB + '</td>' +
-          '<td>' + row.resultAttempt + '</td>' +
-          '<td>' + (row.correct === true ? 'YES' : 'NO') + '</td></tr>');
-    });
+    async: false,
+    url: SERVER_URL + "/results?alias=" + alias,
+    success: function (data) {
+      $('#results-div').show();
+      $('#results-body').empty();
+      data.forEach(function (row) {
+        $('#results-body').append('<tr><td>' + row.id + '</td>' +
+            '<td>' + row.multiplication.factorA + ' x '
+            + row.multiplication.factorB + '</td>' +
+            '<td>' + row.resultAttempt + '</td>' +
+            '<td>' + (row.correct === true ? 'YES' : 'NO') + '</td></tr>');
+      });
+      userId = data[0].user.id;
+    }
   });
+  return userId;
 }
 
 $(document).ready(function () {
@@ -53,7 +61,7 @@ $(document).ready(function () {
 
     // Send the data using post
     $.ajax({
-      url: '/results',
+      url: SERVER_URL + '/results',
       type: 'POST',
       data: JSON.stringify(data),
       contentType: "application/json; charset=utf-8",
@@ -61,17 +69,23 @@ $(document).ready(function () {
       async: false,
       success: function (result) {
         if (result.correct) {
-          $('.result-message').empty().append(
-              "The result is correct! Congratulations!");
+          $('.result-message').empty()
+          .append(
+              "<p class='bg-success text-center'>The result is correct! Congratulations!</p>");
         } else {
-          $('.result-message').empty().append(
-              "Ooops that's not correct! But keep trying!");
+          $('.result-message').empty()
+          .append(
+              "<p class='bg-danger text-center'>Ooops that's not correct! But keep trying!</p>");
         }
       }
     });
 
     updateMultiplication();
 
-    updateStats(userAlias);
+    setTimeout(function () {
+      var userId = updateResults(userAlias);
+      updateStats(userId);
+      updateLeaderBoard();
+    }, 300);
   });
 });

@@ -16,7 +16,6 @@
   <name>multiplication</name>
 
   <dependencies>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -72,7 +71,6 @@
       <version>${rest-assured.version}</version>
       <scope>test</scope>
     </dependency>
-
 
   </dependencies>
 
