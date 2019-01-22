@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
@@ -102,7 +103,7 @@ public class MultiplicationServiceImplTest {
         new MultiplicationResultAttempt(user, multiplication, 3011, false);
 
     List<MultiplicationResultAttempt> lastAttempts =
-        List.of(attempt1, attempt2, attempt3, attempt4);
+        Arrays.asList(attempt1, attempt2, attempt3, attempt4);
 
     given(userRepository.findByAlias("john_doe")).willReturn(Optional.empty());
     given(attemptRepository.findTop5ByUserAliasOrderByIdDesc("john_doe")).willReturn(lastAttempts);

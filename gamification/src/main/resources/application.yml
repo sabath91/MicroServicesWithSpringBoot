@@ -16,6 +16,8 @@ multiplication:
 
 #REST client settings
 multiplicationHost: http://localhost:8000/api
+
+# Service Discovery configuration
 eureka:
   client:
     service-url:
